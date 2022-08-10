@@ -34,7 +34,7 @@ var map = new ol.Map({
         ],
         view: new ol.View({
 //          center: ol.proj.fromLonLat([37.41, 8.82]),
-          center: ol.proj.fromLonLat([139.70349, 35.68643]),
+          center: ol.proj.fromLonLat([139.70325, 35.68544]),
           zoom: 15
         })
       });
@@ -45,4 +45,9 @@ map.on('click', function(e) {
     const lonlat = ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326');
     //経緯度表示
     alert("lat: " + lonlat[1] + ", lon: " + lonlat[0]);
+
+
+
+
+    
 });
