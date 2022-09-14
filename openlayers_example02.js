@@ -1,53 +1,56 @@
+var map;
+var vectorLayer;
+var vectorSource;
+var markerLayer;
+var coordinates;
 
-//import Map from 'ol/Map';
-//import View from 'ol/View';
-//import TileLayer from 'ol/layer/Tile';
-//import XYZ from 'ol/source/XYZ';
-//import { fromLonLat, transform } from 'ol/proj';
+window.onload = function(){
+  map = createMap();
 
-// MIERUNE MONO読み込み
-//const map = new ol.Map ({
-//    target: 'map',
-//    layers: [
-//        new ol.layer.Tile({
-//            source: new ol.source.XYZ({
-//                url: 'https://tile.mierune.co.jp/mierune_mono/{z}/{x}/{y}.png',
-//                attributions: 'Maptiles by <a href="http://mierune.co.jp" target="_blank">MIERUNE</a>, under CC BY. Data by <a href="http://osm.org/copyright" target="_blank">OpenStreetMap</a> contributors, under ODbL.',
-//                attributionsCollapsible: false,
-//                tileSize: [256, 256],
-//                minZoom: 0,
-//                maxZoom: 18
-//            })
-//        })
-//    ],
-//    view: new ol.View ({
-//        center: ol.proj.fromLonLat([139.767, 35.681]),
-//        zoom: 11,
-//    })
-//});
-var map = new ol.Map({
-        target: 'map',
-        layers: [
-          new ol.layer.Tile({
-            source: new ol.source.OSM()
+  // ベクターレイヤーの追加
+  vectorSource = new ol.source.Vector();
+  vectorLayer = new ol.layer.Vector({
+    source: vectorSource,
+    style: new ol.style.Style({
+      image:  new ol.style.Circle({
+          'radius' : 7,
+          'stroke' : new ol.style.Stroke({
+              'color' : 'rgba(255, 255, 255, 1)',
+              'width' : 2,
+          }),
+          'fill' : new ol.style.Fill({
+              'color' : 'rgba(0, 120, 240, 1)',
           })
-        ],
-        view: new ol.View({
-//          center: ol.proj.fromLonLat([37.41, 8.82]),
-          center: ol.proj.fromLonLat([139.70325, 35.68544]),
-          zoom: 15
-        })
-      });
+      }),
+    })
+  });
+  map.addLayer(vectorLayer);
 
-//クリックイベント
-map.on('click', function(e) {
-    //クリック位置経緯度取得
-    const lonlat = ol.proj.transform(e.coordinate, 'EPSG:3857', 'EPSG:4326');
-    //経緯度表示
-    alert("lat: " + lonlat[1] + ", lon: " + lonlat[0]);
+  //クリックイベント
+  map.on('click', function(e) {
+    // ポイントオブジェクトを作成
+    var feature = new ol.Feature({
+        geometry: new ol.geom.Point(e.coordinate)
+    });
 
+    // ポイントをいったんクリアしてから追加する
+    vectorSource.clear();
+    vectorSource.addFeature(feature);
+  });
 
+}
+function createMap() {
+  return new ol.Map({
+    target: 'map',
+    layers: [
+      new ol.layer.Tile({
+        source: new ol.source.OSM()
+      })
+    ],
+    view: new ol.View({
+      center: ol.proj.fromLonLat([139.70325, 35.68544]),
+      zoom: 15
+    })
+  });
 
-
-    
-});
+}
