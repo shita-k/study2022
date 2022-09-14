@@ -39,6 +39,7 @@ window.onload = function(){
   });
 
 }
+
 function createMap() {
   return new ol.Map({
     target: 'map',
