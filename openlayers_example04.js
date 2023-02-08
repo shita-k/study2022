@@ -66,10 +66,27 @@ function setPoint(coordinate) {
     vectorSource.clear();
     vectorSource.addFeature(feature);
 
-    //クリック位置経緯度取得
-    const lonlat = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
     //経緯度表示    
     $('#ctrl_lon').val(coordinate[0]);
     $('#ctrl_lat').val(coordinate[1]);
 
+    if (coordinate) {
+      saveData();
+    }
+}
+function saveData(){
+  var hostUrl= './src/point.php';
+  var lon = $('#ctrl_lon').val();
+  var lat = $('#ctrl_lat').val();
+  $.ajax({
+    url: hostUrl,
+    type:'POST',
+    dataType: 'json',
+    data : {lon : lon, lat : lat },
+    timeout:3000,
+  }).done(function(result) {
+    // alert("ok");
+  }).fail(function(XMLHttpRequest, textStatus, errorThrown) {
+    alert("error");
+  })
 }
